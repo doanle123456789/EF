@@ -13,7 +13,7 @@ namespace EF
         {
             //khai bao bien dbContext khoi tao bang context cua chung ta 
             //khi co duoc dbcontext roi we can lay duoc ten cua CSDL ma no dang lam viec
-            using var dbcontext = new ShopContext(); //su dung tu khoa using de no tu dong giai phong tai nguyen
+            using var dbcontext = new ProductDbContext(); //su dung tu khoa using de no tu dong giai phong tai nguyen
 
             //de lay ten CSDL we truy cap vao dbcontext, truy cap vao thuoc tinh Database, goi pthuc GetDbConnection(),
             //no tra ve mot dtuong, trong dtuong nay co thuoc tinh Database, day chinh la ten CSDL
@@ -39,7 +39,7 @@ namespace EF
 
         static void DropDatabase()
         {
-            using var dbcontext = new ShopContext();
+            using var dbcontext = new ProductDbContext();
             string dbname = dbcontext.Database.GetDbConnection().Database;
             var kq = dbcontext.Database.EnsureDeleted();
             if (kq)
@@ -54,7 +54,7 @@ namespace EF
 
         static void InsertProduct()
         {
-            using var dbcontext = new ShopContext();
+            using var dbcontext = new ProductDbContext();
             /*
              * -De chen 1 dong dl nao do vao dbcontext(vao CSDL) thi we phai thuc hien tao dtuong model(Product), sau do goi pthuc
              * Add hoac AddAsync.
@@ -89,7 +89,7 @@ namespace EF
 
         static void ReadProduct()
         {
-            using var dbcontext = new ShopContext();
+            using var dbcontext = new ProductDbContext();
             /*
              * Su dung linq de truy van dlieu. Nguon truy van la cac thuoc tinh bieu dien cac table trong DbContext. vd thuoc tinh
              * product
@@ -137,7 +137,7 @@ namespace EF
 
         static void RenameProduct(int id, string newName)
         {
-            using var dbcontext = new ShopContext();
+            using var dbcontext = new ProductDbContext();
             //lay ra sp theo id truyen vao
             Product proTheoId = (from p in dbcontext.products
                                 where p.ProductId == id
@@ -179,7 +179,7 @@ namespace EF
         //xoa sp theo id
         static void DeleteProduct(int id)
         {
-            using var dbcontext = new ShopContext();
+            using var dbcontext = new ProductDbContext();
             Product proTheoId = (from p in dbcontext.products
                                  where p.ProductId == id
                                  select p).FirstOrDefault();

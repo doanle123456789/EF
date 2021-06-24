@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace EF.Models
 {
-    class ShopContext:DbContext
+    class ProductDbContext:DbContext
     {
         //neu trong DbContext co cac thuoc tinh, khai bao la public, kieu cua thuoc tinh la DbSet, DbSet la bieu dien mot bang
         //cua CSDL, moi dong cua bang CSDL no bieu dien mot doi tuong lop nao do. O day chung ta khai bao ra mot cai DbSet tuc la
