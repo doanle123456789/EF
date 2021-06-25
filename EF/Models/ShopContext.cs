@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace EF.Models
 {
-    class ProductDbContext:DbContext
+    class ShopContext:DbContext
     {
         //neu trong DbContext co cac thuoc tinh, khai bao la public, kieu cua thuoc tinh la DbSet, DbSet la bieu dien mot bang
         //cua CSDL, moi dong cua bang CSDL no bieu dien mot doi tuong lop nao do. O day chung ta khai bao ra mot cai DbSet tuc la
@@ -37,12 +37,13 @@ namespace EF.Models
 
         //khi gan thuoc tinh [Table("myproduct")] thi thuoc tinh products tuong ung voi bang myproduct tren CSDL
         public DbSet<Product> products { get; set; }
+        public DbSet<Category> categories { get; set; }
         
 
         //them ky hieu @ de xuong hang cho de xem
         private const string connectionString = @"
             Data Source = localhost;
-            Database=data01;
+            Database=shopdata;
             User Id=sa;
             Password=123456";
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -50,6 +51,7 @@ namespace EF.Models
             base.OnConfiguring(optionsBuilder);
             optionsBuilder.UseLoggerFactory(loggerFactory);
             optionsBuilder.UseSqlServer(connectionString); //cho biet Pthuc nay lviec voi CSDL SQLServer
+            //optionsBuilder.UseLazyLoadingProxies();
         }
     }
 }

@@ -1,0 +1,54 @@
+﻿* TAO MOI QUAN HE GIUA CAC MODEL: reference navagation
+  Category-Product: 1-n
+
+  Ta xem Category la bang chinh, Product la bang con, bang phu thuoc. Ta lam nhu sau:
+  - Trong model Product ta tao ra Property co kieu la Category, nhu vay EF se tao ra mlh goi la khoa ngoai FK, FK se tham chieu den
+  PK cua bang chinh. Mql nay la khi we xoa di 1 category thi nhung product thuoc category day khong bi xoa(on delete no action)
+
+  Trong truong hop we muon ten cua khoa ngoai khong tu dong phat sinh theo ten cua khoa chinh nua ma ten nay do chung ta dat, we use 
+  mot attribute ForeignKey
+
+* Chung ta thiet lap khi 1 sp duoc them vao thi bat buoc sp do phai thuoc 1 category nao do nghia la khong duoc phep khac null
+  Chung ta them [Required] khi do mlh la On delete cascade -> khi xoa category thi cac sp thuoc category bi xoa theo
+
+* Thuoc tinh tham chieu den 1 model khac khong tu dong lay ve. Trong truong hop muon lay ve we lam nhu sau: 
+  - Khi chung ta lay duoc san pham product nghia la trong dbcontext ton tai doi tuong giam sat su thay doi cua product, do la 
+  EntityEntry. We can lay duoc dtuong EntityEntry dang theo doi dtuong product nhu sau:
+		var e = dbcontext.Entry(product); //lay doi tuong EntityEntry cua san pham product
+  - We su dung doi tuong EntityEntry de nap nhung du lieu tham chieu toi 1 model khac, truy cap vao pthuc Reference(tham so cua Reference
+  nhan 1 bieu thuc do la 1 cai delegate co tham so la product, tu tham so do phai chi ra thuoc tinh nao ma chung ta muon nap)
+		e.Reference(p => p.Category).Load();
+  - Entity se truy van va lay ve du lieu ma we muon nap
+
+* Neu we xet trong Category thi trong 1 Category co nhieu sp thuoc Category do. Neu vay trong Category chung ta can tao ra 1 properties
+do la 1 tap hop cac sp. vd we use kieu dl la List de khai bao ra property nay, cac phan tu cua dsach List day la product.
+  - Neu 1 property cua model la tap hop chua phan tu la nhung model khac thi cai nay chung ta goi chung la dieu huong tap hop 
+Collect Navigation thi no khong tao ra cac Foreign Key.
+  - Trong model Category co them 1 thuoc tinh do la dieu huong tap hop Collection Navigation co ten la Products, tuc la no chua nhung
+san pham thuoc danh muc do. Khi we lay ve 1 category no khong tu dong lay ve cac Products cua category nay. Muon lay ve Collect 
+Navigation, we cung phai lay ve dtuong EntityEntry cua Category 
+		var e = dbcontext.Entry(category);
+  - e goi phthuc Collection(no nhan tham so la bieu thuc bieu dien category => chi ra truong dlieu se tai ve). Sau do thuc hien pthuc
+Load(). Luc nay no se tai ve Collection Navigation, tuc la we co cac sp thuoc Category 
+
+* Trong truong hop we muon khi nap 1 model thi tat ca reference cua model do cung tu dong nap theo, we use thu vien cua EF la Proxies
+  - Package Proxies nay cho we ap dung ky thuat lazy load, tuc la tu dong nap cac reference, trong dbcontext we goi
+		optionsBuilder.UseLazyLoadingProxies();
+  - Luc nay cac reference muon tu dong nap we phai khai bao them modify virtual
+		public virtual List<Product> Products { set; get; }
+		public virtual Category Category { get; set; }
+  - Luc nay khi chung ta nap Category thi cac sp thuoc Category tu dong duoc nap theo, khong can thiet chay 
+		var e = dbcontext.Entry(product);
+		e.Reference(p => p.Category).Load();
+  - Su dung lazy load code chay kha nang, khong khuyen khich su dung
+
+* Inverse Property: we biet moi Product thuoc 1 Category. Tuy nhien, trong thuc te nhieu mo hinh co so du lieu chung ta muon 1 sp thuoc
+2 category. Neu vay trong model Product chung ta se khai bao de tao ra 1 Foreign Key nua, tuc la no tham chieu den 2 Category 
+  - Luc nay khi tao CSDL tren SQLServer se phat sinh loi. Nguyen nhan loi: trong Category thi lay ra 1 Category, no se lay ra nhung sp 
+  thuoc Category do, lay ra nhung sp nay la can cu vao khoa ngoai, vde o day la co 2 khoa ngoai. Luc nay we phai chi ra trong product 
+  tuong ung khoa ngoai nao. We thiet lap attribute [InverseProperty("chi ra dieu huong den thuoc tinh nao cua bang Category - do la
+  thuoc tinh Products")]
+  - Cho CateId2 co the nhan gia tri null, de khong bi trung On delete cascade. Tuc la sp day bat buoc phai thiet lap danh muc cateId, 
+  con cadeId2 co the thiet lap hoac la khong
+
+* Ktra xem khi xoa Category 1 thi nhung sp thuoc danh muc dien thoai co tu dong xoa theo hay khong 
