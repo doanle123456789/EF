@@ -1,0 +1,33 @@
+﻿- Trong phthuc OnModelCreating thi cac API Fluent se duoc thuc thi. Pthuc nay duoc thuc thi khi tao ra dbcontext, no duoc thuc thi sau thi hoan
+thanh pthuc OnConfiguring 
+- Trong phthuc OnModelCreating co mot doi tuong kieu ModelBuilder. Tai day we can lay ra cac entity, tuc la nhung doi tuong chua cau hinh cua 
+cac model, cac bang. Tu nhung doi tuong do thi we can goi cac pthuc cua Fluent API. VD we muon thiet lap cho Product thi we se lay entity bieu
+dien model Product nay thi we goi pthuc Entity cua modelBuilder, tham so cua pthuc nay chi ra kieu cua model, vd Product thi we goi typeof(Product)
+		var entity = modelBuilder.Entity(typeof(Product));
+- Pthuc nay tra ve dtuong EntityTypeBuilder, we can luu no lai. Sau do tu dtuong EntityTypeBuilder, we goi duoc cac pthuc cua no, pthuc nay chinh
+la cac FluentAP
+- Nhu vay we use entity de goi FluentAPI cho cac Product 
+- Day la cach 1, we cung can lay ra EntityTypeBuilder ma khong can use typeof 
+		var entity = modelBuilder.Entity<chi ra kieu cua model>();
+- Sau khi co EntityTypeBuilder, we can use no de goi cac Fluent API, cac Fluent API nay dang tuong ung thiet lap cho Product 
+- Ngoai ra con co cach thu 3 ma we se use cach nay, we goi pthuc Entity cua modelBuilder<chi ra model ma we se lam viec - do la bang Product>
+(trong tham so nhan 1 delegate Action, delegate nay co tham so chinh la EntityTypeBuilder. Nhu vay tai tham so nay we chi viec viet delegate 
+(entity => {than cua delegate, we use dtuong entity nay de goi cac FluentAPI}))
+- vd: de thiet lap cho bang Product su dung FluentAPI
+  + Cai FluentAPI thu nhat: anh xa bang(Table mapping)
+		entity.ToTable("dien ten cua bang ma we muon tao ra tren SQLServer")
+	Nhu vay model Product se tuong ung voi bang Sanpham tren SQLServer
+  + FluentAPI thu 2: khoa chinh (HashKey)
+		entity.HashKey(tham so tra ve 1 bieu thuc, bieu thuc do chi ra ten cua truong dlieu ma we muon thiet lap lam khoa chinh, bthuc nay duoc
+xd tren kieu model Product);
+  + FluentAPI thu 3: Index - dung de danh chi muc tren SQLServer nham tang toc do truy van, tang toc do tim kiem, ... . Hien tai khong use 
+Attribute de tao ra cac chi muc duoc, bat buoc phai use FluentAPI
+		entity.HashIndex(chi ra truong dlieu nao muon danh chi muc)
+	Sau khi goi pthuc nay thi no se danh chi muc va no tra ve mot dtuong la IndexBuilder
+	Neu muon thiet lap them cho chi muc nay, vd dat ten cho chi muc, chu khong phai ten tu dong phat sinh thi chung ta truy cap va goi them pthuc
+HashDatabaseName(dat ten chi muc). Cai nay ap dung ky thuat factory, luon tra ve dtuong ModelBuilder. Chung ta can goi them cac phthuc khac 
+de thiet lap them cho chi muc nay 
+  + Relative
+        entity.HasIndex(p => p.Category)
+			.WithMany() //bang Category khong chua tap hop chua nhung sp tuong ung voi ForeignKey dang tao ra 
+	Khi tao ra mlh thi no tao ra ten tu dong, we muon dat ten nay goi phthuc 

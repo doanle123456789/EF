@@ -200,8 +200,8 @@ namespace EF
             dbcontext.categories.Add(c2);
             dbcontext.SaveChanges();
 
-            //var c1 = (from c in dbcontext.categories where c.CategoryId == 1 select c).FirstOrDefault();
-            //var c2 = (from c in dbcontext.categories where c.CategoryId == 2 select c).FirstOrDefault();
+            //var c1 = (from c in dbcontext.categories where c.CategoryDetail == 1 select c).FirstOrDefault();
+            //var c2 = (from c in dbcontext.categories where c.CategoryDetail == 2 select c).FirstOrDefault();
 
             dbcontext.Add(new Product() {Name = "Nokia", Price = 1000, CateId = 1 });
             dbcontext.Add(new Product() {Name = "SamSung", Price = 2000, Category = c1 });
@@ -217,8 +217,8 @@ namespace EF
 
         static void Main(string[] args)
         {
-            //DropDatabase();
-            //CreateDatabase();
+            DropDatabase();
+            CreateDatabase();
 
             //Insert, Select, Update, Delete
             //InsertProduct();
@@ -228,7 +228,7 @@ namespace EF
 
             //InsertData();
 
-            using var dbcontext = new ShopContext();
+            //using var dbcontext = new ShopContext();
 
             //Product product = (from p in dbcontext.products where p.ProductId == 3 select p).FirstOrDefault();
             //var e = dbcontext.Entry(product);
@@ -243,8 +243,8 @@ namespace EF
             //else
             //    Console.WriteLine("Category null");
 
-            //var category = (from c in dbcontext.categories where c.CategoryId == 2 select c).FirstOrDefault();
-            //Console.WriteLine($"{category.CategoryId} - {category.Name}");
+            //var category = (from c in dbcontext.categories where c.CategoryDetail == 2 select c).FirstOrDefault();
+            //Console.WriteLine($"{category.CategoryDetail} - {category.Name}");
 
             //var e = dbcontext.Entry(category);
             //e.Collection(c => c.Products).Load();
@@ -257,36 +257,36 @@ namespace EF
             //else
             //    Console.WriteLine("Products == null");
 
-            //var category = (from c in dbcontext.categories where c.CategoryId == 1 select c).FirstOrDefault();
+            //var category = (from c in dbcontext.categories where c.CategoryDetail == 1 select c).FirstOrDefault();
             //dbcontext.Remove(category);
             //dbcontext.SaveChanges();
 
-            Console.WriteLine("lay ra sp co id = 6"); 
-            //var productTheoId = (from p in dbcontext.products where p.ProductId == 6 select p).FirstOrDefault();
-            var productTheoId = dbcontext.products.Find(6);
-            productTheoId.PrintInfo();
+            //Console.WriteLine("lay ra sp co id = 6"); 
+            ////var productTheoId = (from p in dbcontext.products where p.ProductId == 6 select p).FirstOrDefault();
+            //var productTheoId = dbcontext.products.Find(6);
+            //productTheoId.PrintInfo();
 
-            Console.WriteLine("lay ra sp co gia >= 500"); 
-            var pTheoPrice = from p in dbcontext.products where p.Price >= 500 select p;
-            pTheoPrice.ToList().ForEach(pro => pro.PrintInfo());
+            //Console.WriteLine("lay ra sp co gia >= 500"); 
+            //var pTheoPrice = from p in dbcontext.products where p.Price >= 500 select p;
+            //pTheoPrice.ToList().ForEach(pro => pro.PrintInfo());
 
-            Console.WriteLine("Tim sp ten co chu i, sap xep tang dan ve gia");
-            var p1 = from p in dbcontext.products 
-                     where p.Name.Contains("i") 
-                     orderby p.Price descending 
-                     select p;
-            p1.ToList().ForEach(pro => pro.PrintInfo());
+            //Console.WriteLine("Tim sp ten co chu i, sap xep tang dan ve gia");
+            //var p1 = from p in dbcontext.products 
+            //         where p.Name.Contains("i") 
+            //         orderby p.Price descending 
+            //         select p;
+            //p1.ToList().ForEach(pro => pro.PrintInfo());
 
-            Console.WriteLine("Join bang");
-            var p2 = from p in dbcontext.products
-                     join c in dbcontext.categories on p.CateId equals c.CategoryId
-                     select new
-                     {
-                         ten = p.Name,
-                         danhmuc = c.Name,
-                         gia = p.Price
-                     };
-            p2.ToList().ForEach(abc => Console.WriteLine(abc));
+            //Console.WriteLine("Join bang");
+            //var p2 = from p in dbcontext.products
+            //         join c in dbcontext.categories on p.CateId equals c.CategoryDetail
+            //         select new
+            //         {
+            //             ten = p.Name,
+            //             danhmuc = c.Name,
+            //             gia = p.Price
+            //         };
+            //p2.ToList().ForEach(abc => Console.WriteLine(abc));
 
 
 

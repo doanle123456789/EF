@@ -15,10 +15,13 @@ namespace EF.Models
         public int CategoryId { set; get; }
         [StringLength(100)]
         public string Name { set; get; }
-        [Column(TypeName ="ntext")]
+        [Column(TypeName = "ntext")]
         public string Description { set; get; }
         //Collect Navagation
         public virtual List<Product> Products { set; get; }
+        public CategoryDetail categoryDetail { set; get; }
+        
+
 
     }
 }

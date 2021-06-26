@@ -38,6 +38,7 @@ namespace EF.Models
         //khi gan thuoc tinh [Table("myproduct")] thi thuoc tinh products tuong ung voi bang myproduct tren CSDL
         public DbSet<Product> products { get; set; }
         public DbSet<Category> categories { get; set; }
+        public DbSet<CategoryDetail> categoryDetails { get; set; }
         
 
         //them ky hieu @ de xuong hang cho de xem
@@ -52,6 +53,60 @@ namespace EF.Models
             optionsBuilder.UseLoggerFactory(loggerFactory);
             optionsBuilder.UseSqlServer(connectionString); //cho biet Pthuc nay lviec voi CSDL SQLServer
             //optionsBuilder.UseLazyLoadingProxies();
+
+            
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            /*
+                    C1: var entity = modelBuilder.Entity(typeof(Product));
+                    //entity => FluentAPI - Product
+
+                    C2: var entity = modelBuilder.Entity<Product>();
+            */
+            modelBuilder.Entity<Product>(entity =>
+            {
+                //Table mapping
+                entity.ToTable("Sanpham");
+
+                //PK
+                entity.HasKey(p => p.ProductId);
+
+                //HashIndex
+                entity.HasIndex(p => p.Price).HasDatabaseName("index-sanpham-price");
+
+                //Relative
+                entity.HasOne(p => p.Category)
+                    .WithMany()
+                    .HasForeignKey("CateId") //dat ten FK
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("Khoa_ngoai_Sanpham_Category"); //xoa phan 1 thi phan nhieu cung bi xoa theo, no action: xoa 1 thi nhieu khong AH gi, Set null khi CateId co kha nang nhan gia tri null nghia la khi 1 category bi xoa thi truong cateid cua sp se set gia tri la null chu khong xoa di nhugn dong dlieu cua phan nhieu
+
+                entity.HasOne(p => p.Category2)
+                    .WithMany(c => c.Products)
+                    .HasForeignKey("CateId2")
+                    .OnDelete(DeleteBehavior.NoAction);
+
+                entity.Property(p => p.Name)
+                    .HasColumnName("title")
+                    .HasColumnType("nvarchar")
+                    .HasMaxLength(60)
+                    .IsRequired(true)
+                    .HasDefaultValue("ten san pham mac dinh");
+
+            });
+
+            modelBuilder.Entity<CategoryDetail>(entity =>
+            {
+                entity.HasOne(d => d.category)
+                    .WithOne(c => c.categoryDetail)
+                    .HasForeignKey<CategoryDetail>(c => c.CategoryDetailId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
         }
     }
 }
